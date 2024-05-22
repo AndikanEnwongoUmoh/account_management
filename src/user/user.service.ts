@@ -1,10 +1,12 @@
-import { BadRequestException, HttpException, Injectable } from '@nestjs/common';
+import { BadRequestException, HttpException, Injectable, Req, Res } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 import { userDto } from 'dto/user.dto';
 import { User } from 'src/entity/user.entity';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
+import { LoginDto } from 'dto/login.dto';
+import { request, Response } from 'express';
 
 @Injectable()
 export class UserService {
@@ -21,9 +23,33 @@ export class UserService {
           const user = this.userRepository.create({email, password:hashPassword, ...rest})
           return this.userRepository.save(user)
         }catch(err){
-          if (err.code === '222P02') {
+          if (err.code === '22P02') {
             throw new HttpException('Invalid input', 400);
           }
         }
       }
+
+      async login(payload:LoginDto, @Res() res: Response){
+        const{email, password} = payload;
+        const user = await this.userRepository.findOne({where:{email}})
+        if(!user){
+            throw new HttpException('Invalid credentials', 400)
+        }
+        const match = await bcrypt.compare(password, user.password)
+        if(!match){
+            throw new HttpException('Invalid credentials', 400)
+        }
+
+        delete user.password
+
+        const token = await this.jwtService.signAsync({id: user.id, email: user.email})
+        res.cookie('userAuthenticated', token, {httpOnly: true, maxAge: 3600000})
+
+        return res.send({
+          message: 'success',
+          token: token,
+          user: user
+
+        })
     }
+}
