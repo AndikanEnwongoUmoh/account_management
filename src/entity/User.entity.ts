@@ -12,4 +12,7 @@ export class User extends base {
 
     @Column()
     password:string
+
+    @Column({default: false})
+    blocked: boolean
 }
