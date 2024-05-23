@@ -6,7 +6,6 @@ import { User } from 'src/entity/user.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
-import { JwtStrategy } from 'Strategy/jwt.strategy';
 
 @Module({
 

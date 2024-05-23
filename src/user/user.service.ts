@@ -1,12 +1,12 @@
 import { BadRequestException, HttpException, Injectable, NotFoundException, Req, Res } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
-import { userDto } from 'dto/user.dto';
+import { userDto } from 'src/dto/user.dto';
 import { User } from 'src/entity/user.entity';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
-import { LoginDto } from 'dto/login.dto';
-import { Request, Response } from 'express';
+import { LoginDto } from 'src/dto/login.dto';
+import { Response } from 'express';
 
 @Injectable()
 export class UserService {    constructor(@InjectRepository(User) private userRepository: Repository<User>, private readonly jwtService: JwtService) {}
@@ -93,7 +93,7 @@ async signup(payload: userDto){
         }
         
         user.blocked = false;
-        
+
         await this.userRepository.save(user);
       
         return res.send({ message: 'User Unblocked' });
