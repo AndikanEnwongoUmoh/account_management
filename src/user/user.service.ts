@@ -57,6 +57,11 @@ async signup(payload: userDto){
         })
     
     }
+
+    async logout(@Res() res: Response){
+        res.clearCookie('userAuthenticated')
+        return res.send({message: 'success'})
+    }
     async findUser(id: number){
         const user = await this.userRepository.findOne({where:{id}})
         if(!user){

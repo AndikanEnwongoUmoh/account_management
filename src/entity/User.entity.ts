@@ -15,4 +15,10 @@ export class User extends base {
 
     @Column({default: false})
     blocked: boolean
+
+    @Column({nullable: true})
+    resetPasswordToken: string
+
+    @Column({nullable: true})
+    resetPasswordExpires: Date
 }

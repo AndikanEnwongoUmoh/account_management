@@ -18,6 +18,11 @@ export class UserController {
       return  await this.userService.login(loginUserDto, res, );
     }
 
+    @Post('logout')
+    async logoutUser(@Res() res: Response) {
+      return await this.userService.logout(res);
+    }
+
     @Get(':id')
     async findUser(@Param('id') id: number) {
       return await this.userService.findUser(id);
