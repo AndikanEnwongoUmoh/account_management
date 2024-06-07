@@ -28,7 +28,7 @@ import { join } from 'path';
       },
       template:{
         dir: join (__dirname, 'templates'),
-        adapter: new HandlebarsAdapter(),
+        // adapter: new HandlebarsAdapter(),
       }
     })
     

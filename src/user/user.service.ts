@@ -1,12 +1,12 @@
-import { BadRequestException, HttpException, Injectable, NotFoundException, Req, Res } from '@nestjs/common';
+import { BadRequestException, HttpException, HttpStatus, Injectable, NotFoundException, Req, Res } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 import { userDto } from 'src/dto/user.dto';
-import { User } from 'src/entity/user.entity';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { LoginDto } from 'src/dto/login.dto';
 import { Response } from 'express';
+import { User } from 'src/entity/User.entity';
 
 @Injectable()
 export class UserService {    constructor(@InjectRepository(User) private userRepository: Repository<User>, private readonly jwtService: JwtService) {}
@@ -36,7 +36,7 @@ async signup(payload: userDto){
         }
 
         if (user.blocked) {
-            throw new BadRequestException('User is blocked');
+            throw new HttpException('User is blocked', HttpStatus.UNAUTHORIZED);
           }
 
         const match = await bcrypt.compare(password, user.password)
